@@ -2,10 +2,12 @@ package com.jay.basic.framework.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 /**
  * created by Jay on 2019/9/8
@@ -13,6 +15,16 @@ import java.io.IOException;
 public class JacksonUtil
 {
     private static ObjectMapper objectMapper = new ObjectMapper();
+
+
+    static
+    {
+        // 所有日期格式统一为 yyyy:MM:dd HH:mm:ss
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy:MM:dd HH:mm:ss"));
+        // 反序列化时忽略未知属性配置(FAIL_ON_ONKOWN_PROPERTIES)
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    }
+
 
     /**
      * Object -> String
@@ -35,7 +47,7 @@ public class JacksonUtil
     /**
      * String -> Object（返回结果带泛型）
      */
-    public static <T> T read(String content, TypeReference typeReference) throws IOException
+    public static <T> T read(String content, TypeReference<T> typeReference) throws IOException
     {
         return objectMapper.readValue(content, typeReference);
     }
